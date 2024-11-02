@@ -1,0 +1,22 @@
+#!/bin/bash
+# https://forums.debian.net/viewtopic.php?t=143876
+
+# update, upgrade, autoremove, install essentials + go
+sudo bash -c "apt update; apt upgrade; apt autoremove; apt install git build-essentials vim golang nftables"
+
+# firewall config
+sudo bash -c "iptables -F; apt remove iptables iptables-persistent; cp /usr/share/doc/nftables/examples/workstation.nft /etc/nftables.conf \
+    systemctl enable nftables.service; systemctl start nftables.service"
+
+# user creation
+while [true]; do
+    read -p "create a new user? [y/n]" yn
+    if ["$yn" = "y"]; then
+        chmod +x newuser
+        ./newuser
+    else
+        break
+    fi
+done
+
+reboot
